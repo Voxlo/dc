@@ -668,10 +668,10 @@ client.login(channelSecret);
 			{ replyText: text, channelid: data.channelid, quotes: data.quotes = true, groupid: data.groupid }
 		)
 		try {
-			if ((new Date(Date.now()) - data.createAt) >= 30 * 24 * 60 * 60 * 1000 * 6) {
+			if ((new Date(Date.now()) - data.createAt) >= 30 * 24 * 60 * 60 * 1000 * 1) {
 				await job.remove();
 				SendToReplychannel(
-					{ replyText: "已運行六個月, 移除此定時訊息", channelid: data.channelid, quotes: data.quotes = true, groupid: data.groupid }
+					{ replyText: "已運行一個月, 移除此定時訊息", channelid: data.channelid, quotes: data.quotes = true, groupid: data.groupid }
 				)
 			}
 		} catch (e) {
