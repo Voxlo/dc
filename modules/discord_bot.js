@@ -40,6 +40,7 @@ var connect = function () {
 		if (shardids !== 0) return;
 		var object = JSON.parse(data);
 		if (object.botname == 'Discord') {
+			console.log('object', object)
 			const promises = [
 				object,
 				//client.shard.broadcastEval(client => client.channels.fetch(object.message.target.id)),
