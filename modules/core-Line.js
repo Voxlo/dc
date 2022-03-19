@@ -356,8 +356,9 @@ async function sendNewstoAll(rply) {
 		SendToId(rply.target[index].userID, rply.sendNews);
 	}
 }
+/**
 if (agenda && agenda.agenda) {
-	return;
+	
 	agenda.agenda.define("scheduleAtMessageLine", async (job) => {
 		//指定時間一次	
 		let data = job.attrs.data;
@@ -394,7 +395,7 @@ if (agenda && agenda.agenda) {
 	});
 }
 
-
+ */
 app.on('UnhandledPromiseRejection', error => {
 	// Will print "unhandledRejection err is not defined"
 	console.error('Line UnhandledPromiseRejection: ', error.message);
