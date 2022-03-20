@@ -637,7 +637,7 @@ client.on('guildCreate', async guild => {
 client.login(channelSecret);
 
 
-
+/**
 (async function () {
 	if (!agenda) return;
 	agenda.define("scheduleAtMessageDiscord", async (job) => {
@@ -689,7 +689,7 @@ client.login(channelSecret);
 
 	})
 }())
-
+ */
 
 function sendNewstoAll(rply) {
 	for (let index = 0; index < rply.target.length; index++) {
