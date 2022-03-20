@@ -86,7 +86,7 @@ var rollDiceCommand = async function ({
         type: 'text',
         text: ''
     };
-    rply.text = '因近日HKTRPG不穩定，本功能暫時關閉，進行測試'
+    rply.text = '因近日HKTRPG不穩定，本功能暫時關閉一星期到3月28日，進行測試。重開可能需要重新注冊定期事件。'
     return rply
     if (!differentPeformAt(botname)) {
         rply.text = '此功能只能在Discord, Telegram中使用'
