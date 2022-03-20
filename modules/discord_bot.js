@@ -520,7 +520,7 @@ client.on('ready', async () => {
 				SendToId(adminSecret, 'HKTRPG可能下線了');
 			}
 		}
-	}, 180000);
+	}, 1000 * 10);
 	setInterval(async () => {
 		switch (switchSetActivity % 2) {
 			case 1:
@@ -559,22 +559,18 @@ async function count() {
 	console.log('1-1')
 	if (!client.shard) return;
 	console.log('1-2')
-	const promises = [
-		client.shard.fetchClientValues('guilds.cache.size'),
-		client.shard
-			.broadcastEval(c => c.guilds.cache.filter((guild) => guild.available).reduce((acc, guild) => acc + guild.memberCount, 0))
-	];
+	try {
+		const first = await client.shard.fetchClientValues('guilds.cache.size');
+		const second = await client.shard
+			.broadcastEval(c => c.guilds.cache.filter((guild) => guild.available).reduce((acc, guild) => acc + guild.memberCount, 0));
+		const totalGuilds = first.reduce((acc, guildCount) => acc + guildCount, 0);
+		const totalMembers = second.reduce((acc, memberCount) => acc + memberCount, 0);
+		return (`正在運行HKTRPG的Discord 群組數量: ${totalGuilds}\nDiscord 會員數量: ${totalMembers}`);
+	} catch (error) {
+		console.error(`disocrdbot #596 error ${error}`)
+		return;
+	}
 
-	return Promise.all(promises)
-		.then(results => {
-			console.log('results', results[1])
-			const totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
-			const totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
-			return (`正在運行HKTRPG的Discord 群組數量: ${totalGuilds}\nDiscord 會員數量: ${totalMembers}`);
-		})
-		.catch(err => {
-			console.error(`disocrdbot #596 error ${err}`)
-		});
 
 }
 async function count2() {
@@ -810,20 +806,18 @@ async function newRoleReact(channel, message) {
 }
 async function checkWakeUp() {
 	const number = client.shard.client.options.shardCount;
-	const promises = [
-		client.shard.broadcastEval(c => c.shard?.ids[0]),
-		client.shard.broadcastEval(c => c.ws.status),
-	];
-	return Promise.all(promises)
-		.then(results => {
-			if (results[0].length !== number || results[1].reduce((a, b) => a + b, 0) >= 1)
-				return false
-			else return true;
-		})
-		.catch(err => {
-			console.error(`disocrdbot #836 error ${err}`)
+	if (!client.shard) return false;
+	try {
+		const first = await client.shard.broadcastEval(c => c.shard?.ids[0]);
+		const second = await client.shard.broadcastEval(c => c.ws.status);
+		//	console.log(second.reduce((a, b) => a + b, 0), second)
+		if (first.length !== number || second.reduce((a, b) => a + b, 0) >= 1)
 			return false
-		});
+		else return true;
+	} catch (error) {
+		console.error(`disocrdbot #836 error ${error}`)
+		return false
+	}
 
 }
 client.on('messageReactionAdd', async (reaction, user) => {
