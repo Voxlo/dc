@@ -515,12 +515,12 @@ client.on('ready', async () => {
 	setInterval(async () => {
 		if (shardids !== 0) return;
 		if (adminSecret) {
-			let check = await checkWakeUp();
+			let check = await checkWakeUp() || false;
 			if (!check) {
 				SendToId(adminSecret, 'HKTRPG可能下線了');
 			}
 		}
-	}, 1000 * 10);
+	}, 1000 * 60);
 	setInterval(async () => {
 		switch (switchSetActivity % 2) {
 			case 1:
