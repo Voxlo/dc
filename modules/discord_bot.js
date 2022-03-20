@@ -605,7 +605,7 @@ process.on('unhandledRejection', error => {
 	if (error.message === "Missing Access") return;
 	if (error.message === "Missing Permissions") return;
 
-	console.error('Discord Unhandled promise rejection:', error.message);
+	console.error('Discord Unhandled promise rejection:', error, error.message);
 
 	process.send({
 		type: "process:msg",
@@ -647,14 +647,15 @@ client.login(channelSecret);
 		//if (shardids !== 0) return;
 		let data = job.attrs.data;
 		let text = await rollText(data.replyText);
-		SendToReplychannel(
-			{ replyText: text, channelid: data.channelid, quotes: data.quotes = true, groupid: data.groupid }
-		)
 		try {
 			await job.remove();
 		} catch (e) {
 			console.error("Discord Error removing job from collection:scheduleAtMessageDiscord", e);
 		}
+		SendToReplychannel(
+			{ replyText: text, channelid: data.channelid, quotes: data.quotes = true, groupid: data.groupid }
+		)
+
 	})
 
 	agenda.define("scheduleCronMessageDiscord", async (job) => {
@@ -662,21 +663,29 @@ client.login(channelSecret);
 		//const date = new Date(Date.now() + 5000);
 		//指定時間一次	
 		//if (shardids !== 0) return;
-		let data = job.attrs.data;
-		let text = await rollText(data.replyText);
-		SendToReplychannel(
-			{ replyText: text, channelid: data.channelid, quotes: data.quotes = true, groupid: data.groupid }
-		)
 		try {
+			let data = job.attrs.data;
 			if ((new Date(Date.now()) - data.createAt) >= 30 * 24 * 60 * 60 * 1000 * 1) {
 				await job.remove();
+				let text = await rollText(data.replyText);
+				SendToReplychannel(
+					{ replyText: text, channelid: data.channelid, quotes: data.quotes = true, groupid: data.groupid }
+				)
 				SendToReplychannel(
 					{ replyText: "已運行一個月, 移除此定時訊息", channelid: data.channelid, quotes: data.quotes = true, groupid: data.groupid }
 				)
+			} else {
+				let text = await rollText(data.replyText);
+				SendToReplychannel(
+					{ replyText: text, channelid: data.channelid, quotes: data.quotes = true, groupid: data.groupid }
+				)
 			}
+
 		} catch (e) {
 			console.error("Discord Error removing job from collection:scheduleCronMessageDiscord", e);
 		}
+
+
 
 	})
 }())
