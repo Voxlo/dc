@@ -80,7 +80,7 @@ var parseInput = async function ({
 		})
 
 	} catch (error) {
-		console.error('rolldice GET ERROR:', error.name, ' inputStr: ', inputStr, ' botname: ', botname, ' Time: ', new Date());
+		console.error('rolldice GET ERROR:', error, error.name, ' inputStr: ', inputStr, ' botname: ', botname, ' Time: ', new Date());
 
 	}
 	if (rollDiceResult) {
