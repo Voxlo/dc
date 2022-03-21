@@ -50,7 +50,7 @@ manager.on('shardCreate', shard => {
 		console.log(b);
 	});
 	shard.on('error', (error) => {
-		console.error(error)
+		console.error('core-discord error #53', error)
 	})
 });
 manager.spawn();
