@@ -8,7 +8,7 @@ const Discord = require("discord.js");
 const { Client, Intents, Permissions } = Discord;
 const rollText = require('./getRoll').rollText;
 const agenda = require('../modules/schedule') && require('../modules/schedule').agenda;
-
+const log = require('log-to-file');
 
 
 const client = new Client(
