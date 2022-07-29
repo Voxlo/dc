@@ -127,9 +127,9 @@ const rollDiceCommand = async function ({
             if (!mainMsg[2]) rply.text += ' 沒有輸入骰子名稱.'
             if (!mainMsg[3]) rply.text += ' 沒有輸入骰子內容.'
             if (rply.text += checkTools.permissionErrMsg({
-                flag : checkTools.flag.ChkChannelManager,
-                gid : groupid,
-                role : userrole
+                flag: checkTools.flag.ChkChannelManager,
+                gid: groupid,
+                role: userrole
             })) {
                 return rply;
             }
@@ -177,9 +177,9 @@ const rollDiceCommand = async function ({
             //
             if (!mainMsg[2]) rply.text += '沒有骰子名稱. '
             if (rply.text += checkTools.permissionErrMsg({
-                flag : checkTools.flag.ChkChannelManager,
-                gid : groupid,
-                role : userrole
+                flag: checkTools.flag.ChkChannelManager,
+                gid: groupid,
+                role: userrole
             })) {
                 return rply;
             }
@@ -804,6 +804,19 @@ function escapeRegExp(target) {
             target[index] = target[index].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
         return target;
+    }
+}
+
+class MassRandomAns {
+    constructor() {
+        this.randomAns = [];
+    }
+}
+
+class RandomAns {
+    constructor(mainMsg) {
+        this.title = title;
+        this.content = content;
     }
 }
 module.exports = {
