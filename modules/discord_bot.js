@@ -4,12 +4,12 @@ const schema = require('../modules/schema.js');
 const channelSecret = process.env.DISCORD_CHANNEL_SECRET;
 const adminSecret = process.env.ADMIN_SECRET || '';
 const Cluster = require('discord-hybrid-sharding');
-const Discord = require("discord.js-light");
+const Discord = require("discord.js");
 const multiServer = require('../modules/multi-server')
 const checkMongodb = require('../modules/dbWatchdog.js');
 const fs = require('node:fs');
 const errorCount = [];
-const { Client, Intents, Permissions, Collection, MessageActionRow, MessageButton, WebhookClient, MessageAttachment } = Discord;
+const { Client, GatewayIntentBits, Permissions, Collection, MessageActionRow, MessageButton, WebhookClient, MessageAttachment } = Discord;
 const rollText = require('./getRoll').rollText;
 const agenda = require('../modules/schedule') && require('../modules/schedule').agenda;
 exports.z_stop = require('../roll/z_stop');
@@ -62,7 +62,10 @@ const client = new Discord.Client({
 		cacheEmojis: false,
 		cachePresences: false
 	 */
-	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS], partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
+	intents: [GatewayIntentBits.Guilds,
+	GatewayIntentBits.GuildMessages,
+	GatewayIntentBits.MessageContent,
+	GatewayIntentBits.GuildMembers,], partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
 });
 client.cluster = new Cluster.Client(client);
 client.login(channelSecret);
@@ -85,7 +88,7 @@ client.on('messageCreate', async message => {
 	try {
 		if (message.author.bot) return;
 		const result = await handlingResponMessage(message);
-		await handlingMultiServerMessage(message);
+		//await handlingMultiServerMessage(message);
 		if (result && result.text)
 			return handlingSendMessage(result);
 		return;
@@ -1170,6 +1173,7 @@ async function handlingMultiServerMessage(message) {
 		const targetData = target
 		let webhook = await manageWebhook({ channelId: targetData.channelid })
 		let pair = (webhook && webhook.isThread) ? { threadId: targetData.channelid } : {};
+		console.log('webhook',webhook)
 		await webhook.webhook.send({ ...sendMessage, ...pair });
 		//	}
 
@@ -1177,9 +1181,10 @@ async function handlingMultiServerMessage(message) {
 	return;
 }
 function multiServerTarget(message) {
+	console.log(message)
 	const obj = {
 		content: message.content,
-		username: message._member.nickname || message._member.displayName,
+		username: message.author.username,
 		avatarURL: message.author.displayAvatarURL()
 	};
 	return obj;
